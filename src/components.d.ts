@@ -11,6 +11,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     LoadingProductCard: typeof import('./components/LoadingProductCard.vue')['default']
     ProductCard: typeof import('./components/ProductCard.vue')['default']
+    ProductModal: typeof import('./components/ProductModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShimmerProductCard: typeof import('./components/ShimmerProductCard.vue')['default']

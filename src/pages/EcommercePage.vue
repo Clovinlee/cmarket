@@ -1,52 +1,134 @@
 <script setup>
-  import LoadingProductCard from '../components/LoadingProductCard.vue';
+import LoadingProductCard from '../components/LoadingProductCard.vue';
 import ProductCard from '../components/ProductCard.vue'
-  import Product from '../models/products';
-  import Rarity from '../models/rarity';
-  import axios from 'axios';
-  
-  var panels = ref(['rarity']);
+import Product from '../models/products';
+import Rarity from '../models/rarity';
+import axios from 'axios';
+import { useElementVisibility } from '@vueuse/core'
+import { watch } from 'vue'
+import Appbar from '../layouts/Appbar.vue';
+import ProductModal from '../components/ProductModal.vue';
 
-  const PAGE_SIZE = 5;
-  const SKELETON_ITEMS = 4;
-  
-  const isLoading = ref(false);
-  const products = ref([]);
+var panels = ref(['rarity']);
 
-  const pageNow = ref(1);
-  const lastPage = ref(2);
+const PAGE_SIZE = 3;
+const SKELETON_ITEMS = 4;
+const PRODUCT_COLS = ref(3);
 
-  // async function fetchProducts(rarity, merchant, priceLow, priceHigh, page){
-  //   isLoading.value = true;
-  //   try {
-  //     const response = await axios.get('http://localhost:8000/api/products?page=${pageNow}&pagesize=${PAGE_SIZE}');
-  //     const productsData = response.data.products;
-  //     const pagination = response.data.pagination;
+const isLoading = ref(false);
+const products = ref([]);
 
-  //     productsData.map(p => {
-  //       products.value.push(
-  //         new Product(
-  //               p.id,
-  //               p.name,
-  //               p.description,
-  //               p.price,
-  //               p.image,
-  //               new Rarity(p.rarity.id, p.rarity.name, p.rarity.level, p.rarity.color),
-  //           )
-  //       )
-  //     });
+const pageNow = ref(0);
+const lastPage = ref(2);
 
-  //   } catch (error) {
-  //       console.error('Error fetching products:', error);
-  //       return [];
-  //   } finally{
-  //     isLoading.value = false;
-  //   }
-  // }
+const minimumPriceFilter = ref(null);
+const maximumPriceFilter = ref(null);
+
+const rarityFilterDisplay = ref([]);
+const merchantFilterDisplay = ref([]);
+
+const textSearch = ref("");
+
+const dialogProduct = ref(false);
+
+var raritySearch = "";
+
+async function fetchProducts() {
+  isLoading.value = true;
+  pageNow.value += 1;
+
+  let rarity = raritySearch;
+  let merchant = merchantFilterDisplay.value;
+  let priceLow = minimumPriceFilter.value || 0;
+  let priceHigh = maximumPriceFilter.value || 0;
+  let search = textSearch.value;
+  search = search == "null" || search == null ? "" : search;
+
+  try {
+    const response = await axios.get(`http://localhost:8000/api/products?page=${pageNow.value}&pagesize=${12 / PAGE_SIZE}&rarity=${rarity}&merchant=${merchant}&minprice=${priceLow}&maxprice=${priceHigh}&name=${search}`);
+    const productsData = response.data.products;
+    const pagination = response.data.pagination;
+
+    productsData.map(p => {
+      products.value.push(
+        new Product(
+          p.id,
+          p.name,
+          p.description,
+          p.price,
+          p.image,
+          new Rarity(p.rarity.id, p.rarity.name, p.rarity.color, p.rarity.level),
+        )
+      )
+    });
+
+    lastPage.value = pagination.totalPages;
+
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+const skeletonIndicator = ref(null);
+const isSkeletonVisible = useElementVisibility(skeletonIndicator, { threshold: 0.3 });
+
+let timerSearch = null;
+
+const rarityMapping = {
+  "Common": 1,
+  "Uncommon": 2,
+  "Rare": 3,
+  "Epic": 4,
+  "Legendary": 5,
+  // Add more rarity names and their corresponding values as needed
+};
+
+// WATCH FOR SEARCH
+watch([merchantFilterDisplay, minimumPriceFilter, maximumPriceFilter, rarityFilterDisplay, textSearch], (newValue, oldValue) => {
+  clearTimeout(timerSearch); // Clear any existing timer
+  timerSearch = setTimeout(async () => {
+    if (isLoading.value) {
+      clearTimeout(timerSearch);
+      return
+    }
+    pageNow.value = 0;
+    lastPage.value = 2;
+
+    let rarityQuery = "";
+    for (let i = 0; i < rarityFilterDisplay.value.length; i++) {
+      rarityQuery += rarityMapping[rarityFilterDisplay.value[i]] + ",";
+    }
+
+    raritySearch = rarityQuery;
+
+    products.value = [];
+    await fetchProducts()
+
+  }, 1500);
+}, { deep: true });
+
+// WATCH FOR LAZY LOAD
+watch(isSkeletonVisible, (newValue, oldValue) => {
+  // Run your event here
+  if ((oldValue == false || oldValue == null) && newValue == true) {
+    fetchProducts()
+  }
+});
+
+const productSelected = ref(null);
+
+function setDialogProduct(idx) {
+
+  productSelected.value = products.value[idx - 1]
+  dialogProduct.value = true;
+  console.log(productSelected.value)
+}
+
 
 onMounted(async () => {
-  // Code to execute after the component has been mounted
-  // await fetchProducts("","","","","");
+  await fetchProducts()
 });
 
 
@@ -54,27 +136,18 @@ onMounted(async () => {
 
 <template>
   <v-app id="inspire">
-    <v-app-bar>
-      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
-
-      <v-app-bar-title>CMarket</v-app-bar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon="mdi-dots-vertical">
-      </v-btn>
-    </v-app-bar>
+    <Appbar />
 
     <v-main>
       <v-container class="">
         <v-row>
-          <v-col class="border-md rounded-lg" md="3">
+          <v-col class="border-md rounded-lg" sm="2" md="3">
             <div class="text-button">
               Filters
             </div>
             <div class="pl-2">
               <v-expansion-panels class="pa-0 ma-0 shadow-0 border-0" flat multiple v-model="panels">
-                
+
                 <v-expansion-panel class="" value="rarity">
                   <v-expansion-panel-title class="pa-0 ma-0 border-b-lg">
                     <div class="text-button">
@@ -84,23 +157,28 @@ onMounted(async () => {
 
                   <v-expansion-panel-text class="pa-0 ma-0">
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" value="Common"
+                        v-model="rarityFilterDisplay"></v-checkbox>
                       <div>Common</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" value="Uncommon"
+                        v-model="rarityFilterDisplay"></v-checkbox>
                       <div>Uncommon</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" value="Rare"
+                        v-model="rarityFilterDisplay"></v-checkbox>
                       <div>Rare</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" value="Epic"
+                        v-model="rarityFilterDisplay"></v-checkbox>
                       <div>Epic</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" value="Legendary"
+                        v-model="rarityFilterDisplay"></v-checkbox>
                       <div>Legendary</div>
                     </div>
                   </v-expansion-panel-text>
@@ -115,15 +193,18 @@ onMounted(async () => {
 
                   <v-expansion-panel-text class="pa-0 ma-0">
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" v-model="merchantFilterDisplay"
+                        value="Local Merchant"></v-checkbox>
                       <div>Local Merchant</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" v-model="merchantFilterDisplay"
+                        value="Traveling Merchant"></v-checkbox>
                       <div>Traveling Merchant</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-checkbox hide-details density="compact" class="mr-2"></v-checkbox>
+                      <v-checkbox hide-details density="compact" class="mr-2" v-model="merchantFilterDisplay"
+                        value="Black Merchant"></v-checkbox>
                       <div>Black Merchant</div>
                     </div>
                   </v-expansion-panel-text>
@@ -137,35 +218,27 @@ onMounted(async () => {
                   </v-expansion-panel-title>
 
                   <v-expansion-panel-text class="">
-                    <SpaceBox sy="10"></SpaceBox>
-                    <v-text-field density="compact"
-                      label="Lowest Price" hide-details single-line variant="outlined">
+                    <SpaceBox :sy="10"></SpaceBox>
+                    <v-text-field density="compact" label="Lowest Price" hide-details single-line variant="outlined"
+                      v-model="minimumPriceFilter" type="number">
 
                       <template v-slot:prepend-inner>
-                          <v-img
-                            :width="25"
-                            cover
-                            src="/diamond.png"
-                          ></v-img> 
+                        <v-img :width="25" cover src="/diamond.png"></v-img>
                       </template>
 
                     </v-text-field>
 
-                    <SpaceBox sy="5"></SpaceBox>
-                    <div class="text-h6 w-100 d-flex justify-center align-center" >
+                    <SpaceBox :sy="5"></SpaceBox>
+                    <div class="text-h6 w-100 d-flex justify-center align-center">
                       -
                     </div>
-                    <SpaceBox sy="5"></SpaceBox>
+                    <SpaceBox :sy="5"></SpaceBox>
 
-                    <v-text-field density="compact"
-                      label="Highest Price" hide-details single-line variant="outlined">
+                    <v-text-field density="compact" label="Highest Price" hide-details single-line variant="outlined"
+                      v-model="maximumPriceFilter" type="number">
 
                       <template v-slot:prepend-inner>
-                        <v-img
-                            :width="25"
-                            cover
-                            src="/public/diamond.png"
-                          ></v-img> 
+                        <v-img :width="25" cover src="/public/diamond.png"></v-img>
                       </template>
 
                     </v-text-field>
@@ -176,12 +249,42 @@ onMounted(async () => {
             </div>
           </v-col>
           <v-col>
+            <div class="mb-3">
+              <!--SEARCH BAR-->
+              <v-text-field append-inner-icon="mdi-magnify" density="compact" label="Search items" clearable variant="outlined"
+                hide-details single-line v-model="textSearch" class="mb-3"></v-text-field>
+
+              <!--CHIP FILTERS-->
+              <v-chip color="default" variant="flat" closable class="me-2" v-if="rarityFilterDisplay.length > 0"
+                @click:close="rarityFilterDisplay.length = 0">
+                {{ rarityFilterDisplay.map(m => m).join(', ') }}
+              </v-chip>
+              <v-chip color="default" variant="flat" closable class="me-2" v-if="merchantFilterDisplay.length > 0"
+                @click:close="merchantFilterDisplay.length = 0">
+                {{ merchantFilterDisplay.map(m => m).join(', ') }}
+              </v-chip>
+              <v-chip color="default" variant="flat" closable class="me-2" v-if="minimumPriceFilter > 0"
+                @click:close="minimumPriceFilter = 0">
+                Minimum Price : {{ minimumPriceFilter }}
+              </v-chip>
+              <v-chip color="default" variant="flat" closable class="me-2"
+                v-if="(minimumPriceFilter == null && maximumPriceFilter != null) || parseInt(maximumPriceFilter) > parseInt(minimumPriceFilter)"
+                @click:close="maximumPriceFilter = 0">
+                Maximum Price : {{ maximumPriceFilter }}
+              </v-chip>
+            </div>
             <v-row class="">
-              <v-col v-for="idx in 12 + SKELETON_ITEMS" :key="idx" cols="3">
-                <ProductCard rarity="1" v-if="idx < 15">
-                  Transform you into giant with tremendous strength
-                </ProductCard>
-                <!-- <LoadingProductCard v-else></LoadingProductCard> -->
+              <div v-if="dialogProduct"> <!--Needed for rendering-->
+                <ProductModal v-model="dialogProduct" :product="productSelected" />
+              </div>
+              <v-col v-for="idx in products.length" :key="idx" :cols="PRODUCT_COLS" class="">
+                <!-- idx begin at 1, not 0 -->
+                <ProductCard :product="products[idx - 1]" class="w-100" @click.stop="() => { setDialogProduct(idx) }" />
+              </v-col>
+              <v-col v-for="idx in (SKELETON_ITEMS - products.length % SKELETON_ITEMS)" :key="idx" :cols="PRODUCT_COLS"
+                class="" ref="skeletonIndicator">
+                <LoadingProductCard v-if="pageNow < lastPage" :id="'skeletonproduct' + idx">
+                </LoadingProductCard>
               </v-col>
             </v-row>
           </v-col>
