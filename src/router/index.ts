@@ -7,7 +7,7 @@
 // Composables
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import EcommercePage from '../pages/EcommercePage.vue'
+import EcommercePage from '../pages/Ecommerce/EcommercePage.vue'
 
 const routes = [
   { path: '/', component: EcommercePage },

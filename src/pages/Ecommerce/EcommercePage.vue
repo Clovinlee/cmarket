@@ -1,13 +1,12 @@
-<script setup>
-import LoadingProductCard from '../components/LoadingProductCard.vue';
-import ProductCard from '../components/ProductCard.vue'
-import Product from '../models/products';
-import Rarity from '../models/rarity';
-import axios from 'axios';
-import { useElementVisibility } from '@vueuse/core'
-import { watch } from 'vue'
-import Appbar from '../layouts/Appbar.vue';
-import ProductModal from '../components/ProductModal.vue';
+<script setup lang="ts">
+import { useElementVisibility } from '@vueuse/core';
+import { onMounted, ref, watch } from 'vue';
+import { fetchProducts } from './EcommerceScript';
+import { ProductSearchDto } from './dto/ProductSearch.dto';
+import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
+import Product from '../../models/products';
+import MainAppbar from '../../layouts/MainAppbar.vue';
+
 
 var panels = ref(['rarity']);
 
@@ -16,9 +15,9 @@ const SKELETON_ITEMS = 4;
 const PRODUCT_COLS = ref(3);
 
 const isLoading = ref(false);
-const products = ref([]);
+const products = ref<Product[]>([]);
 
-const pageNow = ref(0);
+const pageNow = ref(1);
 const lastPage = ref(2);
 
 const minimumPriceFilter = ref(null);
@@ -33,48 +32,10 @@ const dialogProduct = ref(false);
 
 var raritySearch = "";
 
-async function fetchProducts() {
-  isLoading.value = true;
-  pageNow.value += 1;
-
-  let rarity = raritySearch;
-  let merchant = merchantFilterDisplay.value;
-  let priceLow = minimumPriceFilter.value || 0;
-  let priceHigh = maximumPriceFilter.value || 0;
-  let search = textSearch.value;
-  search = search == "null" || search == null ? "" : search;
-
-  try {
-    const response = await axios.get(`http://localhost:8000/api/products?page=${pageNow.value}&pagesize=${12 / PAGE_SIZE}&rarity=${rarity}&merchant=${merchant}&minprice=${priceLow}&maxprice=${priceHigh}&name=${search}`);
-    const productsData = response.data.products;
-    const pagination = response.data.pagination;
-
-    productsData.map(p => {
-      products.value.push(
-        new Product(
-          p.id,
-          p.name,
-          p.description,
-          p.price,
-          p.image,
-          new Rarity(p.rarity.id, p.rarity.name, p.rarity.color, p.rarity.level),
-        )
-      )
-    });
-
-    lastPage.value = pagination.totalPages;
-
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
 const skeletonIndicator = ref(null);
 const isSkeletonVisible = useElementVisibility(skeletonIndicator, { threshold: 0.3 });
 
-let timerSearch = null;
+let timerSearch = setTimeout(() => { }, 0);
 
 const rarityMapping = {
   "Common": 1,
@@ -85,6 +46,8 @@ const rarityMapping = {
   // Add more rarity names and their corresponding values as needed
 };
 
+// TODO : FETCH TWICE FIX
+
 // WATCH FOR SEARCH
 watch([merchantFilterDisplay, minimumPriceFilter, maximumPriceFilter, rarityFilterDisplay, textSearch], (newValue, oldValue) => {
   clearTimeout(timerSearch); // Clear any existing timer
@@ -93,7 +56,7 @@ watch([merchantFilterDisplay, minimumPriceFilter, maximumPriceFilter, rarityFilt
       clearTimeout(timerSearch);
       return
     }
-    pageNow.value = 0;
+    pageNow.value = 1;
     lastPage.value = 2;
 
     let rarityQuery = "";
@@ -104,31 +67,63 @@ watch([merchantFilterDisplay, minimumPriceFilter, maximumPriceFilter, rarityFilt
     raritySearch = rarityQuery;
 
     products.value = [];
-    await fetchProducts()
+    let response: ProductSearchResponseDto|null = await searchProduct();
+    if(response != null){
+      products.value = response.products;
+    }
 
   }, 1500);
 }, { deep: true });
 
 // WATCH FOR LAZY LOAD
-watch(isSkeletonVisible, (newValue, oldValue) => {
-  // Run your event here
+watch(isSkeletonVisible, async (newValue, oldValue) => {
   if ((oldValue == false || oldValue == null) && newValue == true) {
-    fetchProducts()
+    let response: ProductSearchResponseDto|null = await searchProduct();
+    if(response != null){
+      products.value = products.value.concat(response.products);
+    }
   }
 });
 
-const productSelected = ref(null);
+const productSelected = ref<Product | null>(null);
 
-function setDialogProduct(idx) {
+async function searchProduct(): Promise<ProductSearchResponseDto | null>{
+  console.log("Initiated Search on Page : "+pageNow.value)
+  if(isLoading.value == true) return null;
+  const paramSearch : ProductSearchDto = {
+    pageNow: pageNow.value,
+    pageSize: Math.ceil(12/PAGE_SIZE),
+    raritySearch: raritySearch,
+    merchantSearch: merchantFilterDisplay.value.join(","),
+    minimumPriceSearch: minimumPriceFilter.value ?? -1,
+    maximumPriceSearch: maximumPriceFilter.value ?? -1,
+    nameSearch: textSearch.value
+  }
+
+  isLoading.value = true;
+
+  const response: ProductSearchResponseDto = await fetchProducts(paramSearch);
+
+  pageNow.value += 1;
+  lastPage.value = response.pagination.totalPages;
+
+  isLoading.value = false;
+
+  return response;
+}
+
+function setDialogProduct(idx: number) {
 
   productSelected.value = products.value[idx - 1]
   dialogProduct.value = true;
-  console.log(productSelected.value)
 }
 
 
 onMounted(async () => {
-  await fetchProducts()
+  let response: ProductSearchResponseDto|null = await searchProduct();
+  if(response != null){
+    products.value = response.products;
+  }
 });
 
 
@@ -136,7 +131,7 @@ onMounted(async () => {
 
 <template>
   <v-app id="inspire">
-    <Appbar />
+    <MainAppbar />
 
     <v-main>
       <v-container class="">

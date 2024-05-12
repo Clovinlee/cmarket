@@ -13,6 +13,7 @@
     "types": [
       "vite/client",
       "vite-plugin-vue-layouts/client",
+      "dotenv/config",
       "unplugin-vue-router/client"
     ],
     "allowJs": true,
