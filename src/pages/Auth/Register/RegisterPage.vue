@@ -4,11 +4,15 @@ import { emailRules, notNullRules } from '../AuthScript';
 import {windowScreenSize} from "../../../utils/ScreenSize.ts"
 import { registerEmail } from './RegisterScripts.ts';
 import { AxiosResponse } from 'axios';
+import { useEmailStore } from '../../../stores/EmailStore.ts';
+import { useRouter } from 'vue-router';
 
 const registerLoading = ref(false);
 const githubLoading = ref(false);
 const googleLoading = ref(false);
 const validateOn = ref("submit");
+
+const router = useRouter();
 
 // FORMS
 const form:any = ref(null);
@@ -22,7 +26,10 @@ async function register() {
     if(valid){
         let result: AxiosResponse = await registerEmail(email.value);
         if(result.status == 200){
-            
+            const emailStore = useEmailStore();
+            emailStore.setEmailSent(email.value);
+            router.push({name: "verifyemail"});
+            return;
         }
     }
     registerLoading.value = false;

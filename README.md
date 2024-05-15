@@ -9,6 +9,7 @@ CMarket is a one of my project-learn where I implement all of my knowledge using
 - Vuetify
 - Axios
 - Postgre
+- Pinia State Management
 
 ## 💡 Main Feature
 - Advanced filtering & queries

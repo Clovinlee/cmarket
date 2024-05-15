@@ -14,7 +14,7 @@ const routes = [
   { path: '/', component: EcommercePage, name: "home", meta: {layout: EcommerceLayout} },
   { path: '/register', component: () => import('../pages/Auth/Register/RegisterPage.vue'), name: "register", meta: {layout: ""} },
   { path: '/login', component: () => import('../pages/Auth/Login/LoginPage.vue'), name: "login", meta: {layout: ""} },
-  { path: '/mail', component: () => import('../pages/Auth/Register/EmailSentPage.vue'), name: "mail", meta: {layout: ""} },
+  { path: '/verifyemail', component: () => import('../pages/Auth/Register/EmailSentPage.vue'), name: "verifyemail", meta: {layout: ""} },
   { path: '/notfound', component: () => import('../pages/NotFoundPage.vue'), name: "notfound", meta: {layout: ""} },
   { path: '/:pathMatch(.*)*', redirect: '/notfound' }, 
 ]
