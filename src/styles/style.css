@@ -6,3 +6,43 @@
 .pointer{
     cursor: pointer;
 }
+
+.vh-100{
+    height: 100vh;
+}
+
+.vw-100{
+    width: 100vw;
+}
+
+@font-face {
+    font-family: 'KC Obra Letra';
+    src: url('./font/KCObraLetraRegular.eot');
+    src: local('KC Obra Letra'), local('KCObraLetraRegular'),
+        url('./font/KCObraLetraRegular.eot?#iefix') format('embedded-opentype'),
+        url('./font/KCObraLetraRegular.woff2') format('woff2'),
+        url('./font/KCObraLetraRegular.woff') format('woff'),
+        url('./font/KCObraLetraRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'KC Obra Letra';
+    src: url('./font/KCObraLetraBold.eot');
+    src: local('KC Obra Letra Bold'), local('KCObraLetraBold'),
+        url('./font/KCObraLetraBold.eot?#iefix') format('embedded-opentype'),
+        url('./font/KCObraLetraBold.woff2') format('woff2'),
+        url('./font/KCObraLetraBold.woff') format('woff'),
+        url('./font/KCObraLetraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+.text-title{
+    font-family: 'KC Obra Letra', sans-serif !important;
+}

@@ -5,16 +5,22 @@
  */
 
 // Composables
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import EcommercePage from '../pages/Ecommerce/EcommercePage.vue'
+import EcommerceLayout from '../layouts/EcommerceLayout.vue'
 
 const routes = [
-  { path: '/', component: EcommercePage },
+  { path: '/', component: EcommercePage, name: "home", meta: {layout: EcommerceLayout} },
+  { path: '/register', component: () => import('../pages/Auth/Register/RegisterPage.vue'), name: "register", meta: {layout: ""} },
+  { path: '/login', component: () => import('../pages/Auth/Login/LoginPage.vue'), name: "login", meta: {layout: ""} },
+  { path: '/mail', component: () => import('../pages/Auth/Register/EmailSentPage.vue'), name: "mail", meta: {layout: ""} },
+  { path: '/notfound', component: () => import('../pages/NotFoundPage.vue'), name: "notfound", meta: {layout: ""} },
+  { path: '/:pathMatch(.*)*', redirect: '/notfound' }, 
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes,
 })
 

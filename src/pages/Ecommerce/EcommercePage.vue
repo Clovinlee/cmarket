@@ -5,7 +5,6 @@ import { fetchProducts } from './EcommerceScript';
 import { ProductSearchDto } from './dto/ProductSearch.dto';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import Product from '../../models/products';
-import MainAppbar from '../../layouts/MainAppbar.vue';
 
 
 var panels = ref(['rarity']);
@@ -131,8 +130,6 @@ onMounted(async () => {
 
 <template>
   <v-app id="inspire">
-    <MainAppbar />
-
     <v-main>
       <v-container class="">
         <v-row>
