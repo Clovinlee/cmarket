@@ -24,12 +24,17 @@ async function register() {
     validateOn.value = "input";
     const {valid, errors} = await form.value?.validate();
     if(valid){
-        let result: AxiosResponse = await registerEmail(email.value);
-        if(result.status == 200){
+        try {
+            let result: AxiosResponse = await registerEmail(email.value);
             const emailStore = useEmailStore();
             emailStore.setEmailSent(email.value);
             router.push({name: "verifyemail"});
             return;
+        } catch (error) {
+            console.log(error);   
+            // TODO: Error Handling
+            // 1. Email Exist
+            // 2. Sending email took too long
         }
     }
     registerLoading.value = false;
@@ -38,7 +43,6 @@ async function register() {
 const { isMobile } = windowScreenSize(600);
 
 onMounted(() => {
-    console.log("Mounted");
 });
 
 </script>
@@ -79,7 +83,7 @@ onMounted(() => {
 
                     <v-form @submit.prevent :validate-on="validateOn" ref="form">
                         <v-text-field v-model="email" name="email" density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
-                        variant="outlined" hint="Example: johndoe@mail.com" class="text-left mb-5" :rules="[(value) => notNullRules(value, 'Email'), emailRules]"></v-text-field>
+                        variant="outlined" hint="Example: johndoe@mail.com" class="text-left mb-5" :rules="[(value: string) => notNullRules(value, 'Email'), emailRules]"></v-text-field>
 
                         <v-btn block :loading="registerLoading" @click="register" class="mb-3" variant="tonal" color="blue-darken-1" type="submit">Register</v-btn>
                     </v-form>

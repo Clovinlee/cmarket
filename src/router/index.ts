@@ -11,12 +11,27 @@ import EcommercePage from '../pages/Ecommerce/EcommercePage.vue'
 import EcommerceLayout from '../layouts/EcommerceLayout.vue'
 
 const routes = [
-  { path: '/', component: EcommercePage, name: "home", meta: {layout: EcommerceLayout} },
-  { path: '/register', component: () => import('../pages/Auth/Register/RegisterPage.vue'), name: "register", meta: {layout: ""} },
-  { path: '/login', component: () => import('../pages/Auth/Login/LoginPage.vue'), name: "login", meta: {layout: ""} },
-  { path: '/verifyemail', component: () => import('../pages/Auth/Register/EmailSentPage.vue'), name: "verifyemail", meta: {layout: ""} },
-  { path: '/notfound', component: () => import('../pages/NotFoundPage.vue'), name: "notfound", meta: {layout: ""} },
-  { path: '/:pathMatch(.*)*', redirect: '/notfound' }, 
+  { path: '/', component: EcommercePage, name: "home", meta: { layout: EcommerceLayout } },
+  { path: '/register', component: () => import('../pages/Auth/Register/RegisterPage.vue'), name: "register", meta: { layout: "" } },
+  { path: '/login', component: () => import('../pages/Auth/Login/LoginPage.vue'), name: "login", meta: { layout: "" } },
+  {
+    path: '/verify',
+    redirect: '/notfound',
+    children: [
+      {
+        path: 'email',
+        component: () => import('../pages/Auth/Register/EmailSentPage.vue'),
+        name: "verifyemail",
+      },
+      {
+        path: 'email/:uuid',
+        component: () => import('../pages/Auth/Register/EmailRegisterPage.vue'),
+        name: "verifyemailuuid",
+      },
+    ]
+  },
+  { path: '/notfound', component: () => import('../pages/NotFoundPage.vue'), name: "notfound", meta: { layout: "" } },
+  { path: '/:pathMatch(.*)*', redirect: '/notfound' },
 ]
 
 const router = createRouter({

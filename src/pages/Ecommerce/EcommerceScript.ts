@@ -4,11 +4,11 @@ import axios from 'axios';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import Product from '../../models/products';
 import Rarity from '../../models/rarity';
+import { AxiosClient } from '../../api/AxiosClient';
 
 
 async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSearchResponseDto> {
-    let API_URL = import.meta.env.VITE_API_URL as string;
-    API_URL += "products?";
+    let API_URL = "products?"
 
     if (paramSearch.raritySearch != "") {
         API_URL += `rarity=${paramSearch.raritySearch}&`;
@@ -29,7 +29,9 @@ async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSear
     API_URL += `pagesize=${paramSearch.pageSize}`;
 
     try {
-        const response = await axios.get(API_URL);
+        // const response = await axios.get(API_URL);
+        const response = await AxiosClient.getInstance().get(API_URL);
+
         
 
         const productsData = response.data.products.map(p => {
