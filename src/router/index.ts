@@ -9,15 +9,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import EcommercePage from '../pages/Ecommerce/EcommercePage.vue'
 import EcommerceLayout from '../layouts/EcommerceLayout.vue'
-import { AxiosClient } from '../api/AxiosClient'
-import { LOGIN_JWT_ENDPOINT } from '../ApiEndpoints'
-import { Role } from '../models/Role'
-
-enum RoleEnum {
-  ROLE_USER = 'user',
-  ROLE_ADMIN = 'admin',
-  ROLE_GUEST = 'guest',
-}
+import { RoleEnum } from "./role-enum";
+import { roleGuard } from './role-guard';
 
 const routes = [
   { path: '/', component: EcommercePage, name: "home", meta: { layout: EcommerceLayout } },
@@ -51,44 +44,7 @@ const router = createRouter({
 
 // Route Guard Middleware
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.role) {
-    let roleAccess: RoleEnum[] = [];
-    if(Array.isArray(to.meta.role)){
-      roleAccess = to.meta.role;
-    }
-
-    let userRole: string | null = null;
-    try {
-      const response = await AxiosClient.getInstance().post(LOGIN_JWT_ENDPOINT, {}, { withCredentials: true });
-      userRole = (response.data.user.role.name as string).toLowerCase();
-    } catch (e) {
-
-    }
-
-    if(roleAccess.length == 0){
-      next();
-    }else{
-      if (!userRole) {
-        // user not logged in
-        if (roleAccess.includes(RoleEnum.ROLE_GUEST)) {
-          next();
-        } else {
-          next({ name: "login" });
-        }
-      } else {
-        // user logged in
-        const userRoleEnum: RoleEnum = userRole as RoleEnum; // convert userRole to RoleEnum
-        if (roleAccess.includes(userRoleEnum)) { 
-          next();
-        }else if(roleAccess.includes(RoleEnum.ROLE_GUEST)){
-          next({ name: "home" });
-        }
-      }
-    } 
-  }
-
-  next();
-}
-);
+  await roleGuard(to, from, next);
+});
 
 export default router

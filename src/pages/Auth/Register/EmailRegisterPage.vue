@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { checkUuid, registerUser, loginUser } from './EmailRegisterScript';
 import { useRoute, useRouter } from 'vue-router';
-import { notNullRules, minimumLength, minimumCapital, sameField } from '../AuthScript';
+import { notNullRules, minimumLength, minimumCapital, sameField } from '../../../utils/FormRules';
 import { AxiosResponse } from 'axios';
 
 

@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import Cookies from 'js-cookie';
 import { REFRESH_JWT_ENDPOINT } from "../ApiEndpoints";
 
 class AxiosClient {
@@ -22,7 +21,8 @@ class AxiosClient {
             AxiosClient.instance.interceptors.response.use(response => response,
             async function (error: AxiosError) {
                 let originalRequest: any = error.config;
-                const JwtTokenExpired: boolean = (error.response?.data as any).message.includes("TOKEN_EXPIRED");
+                const JwtTokenExpired: boolean = (error.response?.data as any).message.includes("TOKEN_EXPIRED") && error.response?.status == 401;
+
                 if(JwtTokenExpired && originalRequest._retry == null && originalRequest._retry != true){
                     try{
                         const res:AxiosResponse = await AxiosClient.refreshToken();
@@ -30,7 +30,7 @@ class AxiosClient {
 
                         return AxiosClient.getInstance().request(originalRequest);
                         // do request again
-                        // console.log(res.data.token);
+                        // (res.data.token);
 
                     }catch(e){
                         return error;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { emailRules, notNullRules } from '../AuthScript';
+import { emailRules, notNullRules } from '../../../utils/FormRules.ts';
 import { windowScreenSize } from "../../../utils/ScreenSize.ts"
 import { registerEmail } from './RegisterScripts.ts';
 import { AxiosResponse } from 'axios';

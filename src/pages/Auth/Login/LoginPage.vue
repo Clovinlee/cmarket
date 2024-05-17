@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { emailRules, notNullRules } from '../AuthScript';
+import { emailRules, notNullRules } from '../../../utils/FormRules';
 import { checkEmail, loginEmail } from './LoginScript';
 import { AxiosResponse } from 'axios';
-import { User } from '../../../models/User';
-import { useUserStore } from '../../../stores/UserStore';
+import { authSelf } from '../AuthScript';
 
 const loginLoading = ref(false);
 const githubLoading = ref(false);
@@ -54,7 +53,7 @@ async function login() {
                 validateOn.value = "input";
             }else{
                 //login success
-                let user: User = User.From(response.data.user);
+                await authSelf(); // <== save user from JWT to pinia store
                 router.replace({"name": "home"});
                 return;
             }

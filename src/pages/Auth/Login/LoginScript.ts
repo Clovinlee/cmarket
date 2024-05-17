@@ -1,8 +1,6 @@
 import { AxiosResponse } from "axios"
 import { AxiosClient } from "../../../api/AxiosClient";
 import { GET_USER_BY_EMAIL, LOGIN_USER_ENDPOINT } from "../../../ApiEndpoints";
-import { useUserStore } from "../../../stores/UserStore";
-import { User } from "../../../models/User";
 
 async function loginEmail(email: string, password: string): Promise<AxiosResponse>{
     try{
@@ -11,10 +9,6 @@ async function loginEmail(email: string, password: string): Promise<AxiosRespons
         // Login success
         // 1. refresh token & access token saved into HTTPONLY cookie
         // 2. cookie authorization handled in BE middleware
-
-        let userStore = useUserStore();
-        let user: User = User.From(response.data.user);
-        userStore.setUser(user);
 
         return response;
     }catch(e){

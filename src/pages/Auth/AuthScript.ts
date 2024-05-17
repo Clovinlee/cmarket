@@ -1,29 +1,20 @@
-function emailRules(value: string){
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value) == true ? true : "Invalid email address";
-}
+import { AxiosClient } from "../../api/AxiosClient";
+import { LOGIN_JWT_ENDPOINT } from "../../ApiEndpoints";
+import { User } from "../../models/User";
+import { useUserStore } from "../../stores/UserStore";
 
-function notNullRules(value: string, field = "Field"){
-    return value !== undefined && value != "" && value != null ? true : field+" is required";
-}
-
-function minimumLength(value: string, length: number){
-    return value.length >= length ? true : "Field must be at least "+length+" or more characters";
-}
-
-function maximumLength(value: string, length: number){
-    return value.length <= length ? true : "Field must be "+length+" characters maximum";
-}
-function minimumCapital(value: string, length: number){
-    const uppercaseCount = (value.match(/[A-Z]/g) || []).length;
-    return uppercaseCount >= length ? true : "Field must have at least "+length+" capital letter";
-}
-
-function sameField(value1: string, value2: string, field1: string, field2: string){
-    if(value1 != value2){
-        return field1+" and "+field2+" must be the same";
+async function authSelf(): Promise<User|null>{
+    
+    try{
+        let response = await AxiosClient.getInstance().post(LOGIN_JWT_ENDPOINT, {}, {withCredentials: true});
+        let userStore = useUserStore();
+        let user: User = User.From(response.data.user);
+        userStore.setUser(user);
+    
+        return user;
+    }catch(e){
+        return null;
     }
-    return true;
 }
 
-export { emailRules, notNullRules, minimumLength, maximumLength, minimumCapital, sameField};
+export {authSelf}
