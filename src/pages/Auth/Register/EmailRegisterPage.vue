@@ -100,9 +100,9 @@ async function register() {
                         :type="visible ? 'text' : 'password'" density="compact" v-model="password"
                         placeholder="Password" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                         :rules="[
-                            (value) => notNullRules(value, 'Password'),
-                            (v) => minimumLength(v, 5),
-                            (v) => minimumCapital(v, 1)
+                            (v: string) => notNullRules(v, 'Password'),
+                            (v: string) => minimumLength(v, 5),
+                            (v: string) => minimumCapital(v, 1)
                         ]" class="mb-2">
                         <template #append-inner>
                             <button @click="visible = !visible" tabindex="-1" class="pointer" style="color:grey">

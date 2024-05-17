@@ -58,7 +58,7 @@ a {
 
 <template>
     <v-container class="vh-100 d-flex flex-column">
-        <v-sheet class="w-100 text-h2 text-center text-title mb-15">CMarket</v-sheet>
+        <v-sheet class="w-100 text-h2 text-center text-title mb-8">CMarket</v-sheet>
         <v-sheet class="flex-1-1-100 d-flex align-center mt-2">
             <v-row no-gutters class="ga-15">
                 <v-col class="d-flex flex-column justify-center align-center" cols="12" sm="5" md="7">
@@ -72,14 +72,15 @@ a {
                     </div>
                 </v-col>
                 <v-col class="text-center elevation-4 pa-10 mb-10" cols="12" sm="5" md="4">
-                    <div class="text-h4 mb-5">Register</div>
+                    <div class="text-h4 font-weight-bold">Register</div>
+                    <div class="text-subtitle-1 mb-6">Already have an account? <RouterLink to="login">Login now</RouterLink></div>
 
                     <!-- -->
                     <div class="d-flex flex-column ga-2">
                         <v-btn prepend-icon="mdi-google" variant="outlined" :loading="googleLoading">Google</v-btn>
                         <v-btn prepend-icon="mdi-github" variant="outlined" :loading="githubLoading">Github</v-btn>
                     </div>
-                    <div class="text-overline mt-5">Or Register With</div>
+                    <div class="text-overline mt-5 mb-2">Or Register With</div>
                     <!-- -->
 
                     <div class="text-subtitle-1 text-medium-emphasis text-left">Email Address</div>
@@ -90,7 +91,7 @@ a {
                             class="text-left mb-5" :error-messages="emailErrorMessages"
                             :rules="[(value: string) => notNullRules(value, 'Email'), emailRules]"></v-text-field>
 
-                        <v-btn block :loading="registerLoading" @click="register" class="mb-3" variant="tonal"
+                        <v-btn block :loading="registerLoading" @click="register" class="mb-5" variant="tonal"
                             color="blue-darken-1" type="submit">Register</v-btn>
                     </v-form>
 
