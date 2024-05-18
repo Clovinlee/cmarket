@@ -22,7 +22,7 @@ async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSear
     if (paramSearch.maximumPriceSearch != -1) {
         API_URL += `maxprice=${paramSearch.maximumPriceSearch}&`;
     }
-    if (paramSearch.nameSearch != "") {
+    if (paramSearch.nameSearch != "" || paramSearch.nameSearch != null) {
         API_URL += `name=${paramSearch.nameSearch}&`;
     }
     API_URL += `page=${paramSearch.pageNow}&`;

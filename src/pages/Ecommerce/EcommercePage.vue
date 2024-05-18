@@ -95,7 +95,7 @@ async function searchProduct(): Promise<ProductSearchResponseDto | null>{
     merchantSearch: merchantFilterDisplay.value.join(","),
     minimumPriceSearch: minimumPriceFilter.value ?? -1,
     maximumPriceSearch: maximumPriceFilter.value ?? -1,
-    nameSearch: textSearch.value
+    nameSearch: textSearch.value ?? ""
   }
 
   isLoading.value = true;
