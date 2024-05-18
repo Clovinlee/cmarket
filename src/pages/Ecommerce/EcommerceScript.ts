@@ -1,6 +1,4 @@
-import { onMounted, ref, watch } from 'vue';
 import { ProductSearchDto } from './dto/ProductSearch.dto';
-import axios from 'axios';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import Product from '../../models/products';
 import Rarity from '../../models/rarity';
