@@ -6,7 +6,6 @@ import { ProductSearchDto } from './dto/ProductSearch.dto';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import Product from '../../models/products';
 
-
 var panels = ref(['rarity']);
 
 const PAGE_SIZE = 3;
@@ -131,7 +130,7 @@ onMounted(async () => {
 <template>
   <v-app id="inspire">
     <v-main>
-      <v-container class="">
+      <v-container class="mt-5">
         <v-row>
           <v-col class="border-md rounded-lg" sm="2" md="3">
             <div class="text-button">

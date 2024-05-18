@@ -58,7 +58,6 @@ a {
 
 <template>
     <v-container class="vh-100 d-flex flex-column">
-        <v-sheet class="w-100 text-h2 text-center text-title mb-8">CMarket</v-sheet>
         <v-sheet class="flex-1-1-100 d-flex align-center mt-2">
             <v-row no-gutters class="ga-15">
                 <v-col class="d-flex flex-column justify-center align-center" cols="12" sm="5" md="7">

@@ -98,7 +98,6 @@ async function login() {
 
 <template>
     <v-container class="vh-100 d-flex flex-column">
-        <v-sheet class="w-100 text-h2 text-center text-title mb-8">CMarket</v-sheet>
         <!-- <v-btn @click="authTest">TEST</v-btn> -->
         <v-row class="flex-1-1-100 d-flex align-center mt-2 justify-center px-10">
             <v-col class="text-center elevation-4 pa-10 mb-10" cols="12" sm="8" md="6" lg="4">
