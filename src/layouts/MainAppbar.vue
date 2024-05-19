@@ -18,7 +18,7 @@ const router = useRouter();
 onMounted(() => {
   user.value = userStore.getUser;
   loadingUserInformation.value = false;
-  console.log(user.value);
+  // console.log(user.value);
 });
 
 function getInitials(): string | null {

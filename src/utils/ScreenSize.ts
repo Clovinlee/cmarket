@@ -5,9 +5,10 @@ function windowScreenSize(mobileWidth = 576) {
     let isMobile = ref(false);
     // Base value
     isMobile.value = window.innerWidth <= mobileWidth;
-    
+    // console.log(window.innerWidth, mobileWidth, isMobile.value);
     const refreshScreenSize = function (e) {
         isMobile.value = e.target.innerWidth < mobileWidth;
+        // console.log(window.innerWidth, mobileWidth, isMobile.value);
     };
     
     onMounted(() => {

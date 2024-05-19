@@ -3,10 +3,11 @@ import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import Product from '../../models/products';
 import Rarity from '../../models/rarity';
 import { AxiosClient } from '../../api/AxiosClient';
+import { PRODUCT_ENDPOINT } from '../../ApiEndpoints';
 
 
 async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSearchResponseDto> {
-    let API_URL = "products?"
+    let API_URL = PRODUCT_ENDPOINT + "?";
 
     if (paramSearch.raritySearch != "") {
         API_URL += `rarity=${paramSearch.raritySearch}&`;
@@ -49,4 +50,14 @@ async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSear
     }
 }
 
-export { fetchProducts }
+class Filter {
+    id: string;
+    name: string;
+
+    constructor(id: string, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+  }
+
+export { fetchProducts, Filter }
