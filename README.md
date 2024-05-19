@@ -18,7 +18,9 @@ CMarket is a one of my project-learn where I implement all of my knowledge using
   - Catalog Detail
 - Auth
   - Email Confirmation
-  - Role ***(To be implemented)***
+  - Role 
+  - JWT Auth Guard & Refresh
+  - Logout
   - Reset Password ***(To be implemented)***
 - Item Purchase ***(To be implemented)***
 - Payment Gateway ***(To be implemented)***
@@ -59,6 +61,13 @@ npm run dev
 *As a side note, UI haven't been polished fully. Will do later*
 
 ---
+
+## Reference Link
+| CMarket Backend                                            | Link                                                | Note              |
+|------------------------------------------------------------|-----------------------------------------------------|-------------------|
+| [NestJS](https://github.com/Clovinlee/cmarket_backend_nest)              | `NestJS`                                      | Main backend with *full feature*                  |
+| [Java Spring](https://github.com/Clovinlee/cmarket_backend_spring) | `Java Spring JPA`                                      | All feature *excluding authentication*                  |
+| [Go Gin](https://github.com/Clovinlee/cmarket_backend)                     | `Go Gin`                                      | All feature *excluding authentication*                  |
 
 # Application Diagram
 Some reference to the project feature complexity
