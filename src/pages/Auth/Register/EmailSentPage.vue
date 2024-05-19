@@ -6,12 +6,14 @@ import { ref } from 'vue';
 const emailStore = useEmailStore();
 const router = useRouter();
 const confirmAccess = ref(false);
+let emailUser = "";
 
 
 if (emailStore.emailSent == "" || emailStore.emailSent == null) {
     router.replace({ name: "notfound" });
 } else {
     confirmAccess.value = true;
+    emailUser = emailStore.emailSent;
     emailStore.setEmailSent("");
 }
 
@@ -38,7 +40,7 @@ if (emailStore.emailSent == "" || emailStore.emailSent == null) {
             </div>
             <hr class="dashed-line my-3">
             <div class="text font-weight-bold">
-                clozzero@gmail.com
+                {{ emailUser }}
             </div>
             <RouterLink to="/">
             <v-btn class="mt-3" color="primary">
