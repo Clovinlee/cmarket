@@ -160,12 +160,12 @@ onMounted(async () => {
                 {{ filterStore.merchantFilterDisplay.map(function(m: string) {return (filterStore.merchantFilterData as Filter[]).filter(f => f.id == m).map(f => f.name) }).join(', ') }}
               </v-chip>
               <v-chip color="default" variant="flat" closable class="me-2" v-if="filterStore.minimumPriceFilter > 0"
-                @click:close="() => filterStore.setMinimumPriceFilter(0)">
+                @click:close="() => filterStore.setMinimumPriceFilter(null)">
                 Minimum Price : {{ filterStore.minimumPriceFilter }}
               </v-chip>
               <v-chip color="default" variant="flat" closable class="me-2"
                 v-if="(filterStore.minimumPriceFilter == null && filterStore.maximumPriceFilter != null) || parseInt(filterStore.maximumPriceFilter) > parseInt(filterStore.minimumPriceFilter)"
-                @click:close="() => filterStore.setMaximumPriceFilter(0)">
+                @click:close="() => filterStore.setMaximumPriceFilter(null)">
                 Maximum Price : {{ filterStore.maximumPriceFilter }}
               </v-chip>
             </div>
