@@ -57,3 +57,17 @@ npm run dev
 ```
 
 *As a side note, UI haven't been polished fully. Will do later*
+
+---
+
+# Application Diagram
+Some reference to the project feature complexity
+
+## User Login Sequence Diagram
+![CMarket Login Sequence Diagram](https://raw.githubusercontent.com/Clovinlee/cportofolio/main/public/images/projects/cmarket_login_sequence_diagram.png)
+
+## User Register Sequence Diagram
+![CMarket Register Sequence Diagram](https://raw.githubusercontent.com/Clovinlee/cportofolio/main/public/images/projects/cmarket_register_sequence_diagram.png)
+
+## User JWT Sequence Diagram
+![CMarket JWT Sequence Diagram](https://raw.githubusercontent.com/Clovinlee/cportofolio/main/public/images/projects/cmarket_jwt_sequence_diagram.png)
