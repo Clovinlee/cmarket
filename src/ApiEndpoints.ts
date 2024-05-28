@@ -3,8 +3,8 @@ const MAIL_ENDPOINT = "/email";
 const USER_ENDPOINT = "/users";
 const PRODUCT_ENDPOINT = "/products";
 
-const GET_MERCHANT_FILTERS = PRODUCT_ENDPOINT+"/merchantfilters";
-const GET_RARITY_FILTERS = PRODUCT_ENDPOINT+"/rarityfilters";
+const GET_MERCHANT_FILTERS = PRODUCT_ENDPOINT+"/filters/merchantfilters";
+const GET_RARITY_FILTERS = PRODUCT_ENDPOINT+"/filters/rarityfilters";
 
 const REGISTER_EMAIL_ENDPOINT = MAIL_ENDPOINT+"/send";
 

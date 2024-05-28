@@ -44,3 +44,31 @@
 .text-title{
     font-family: 'KC Obra Letra', sans-serif !important;
 }
+
+.hide-scroll{
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scroll::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+.left-0{
+    left:0;
+}
+.right-0{
+    right:0;
+}
+.top-50{
+    top: 50%;
+}
+
+
+.transform-middle-y{
+    transform: translateY(-50%);
+}
+
+.centered-input input {
+    text-align: center
+  }

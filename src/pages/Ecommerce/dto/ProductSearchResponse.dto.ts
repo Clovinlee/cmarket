@@ -1,4 +1,4 @@
-import Product from "../../../models/products";
+import Product from "../../../models/Product";
 
 class ProductSearchResponseDto {
     constructor(

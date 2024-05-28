@@ -5,12 +5,13 @@ import { fetchProducts, Filter } from './EcommerceScript';
 import { ProductSearchDto } from './dto/ProductSearch.dto';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
 import { windowScreenSize } from "../../utils/ScreenSize"
-import Product from '../../models/products';
+import Product from '../../models/Product';
 import { useFilterStore } from '../../stores/ECommerce/FilterFormStore';
 import FormFilterComponent from './components/FormFilterComponent.vue';
+import { useRouter } from 'vue-router';
 
 
-const MAX_COLUMNS = 12;
+const router = useRouter();
 const PAGE_SIZE = 8; // fetch 8 items at a time
 const SKELETON_ITEMS = ref(4);
 
@@ -94,11 +95,11 @@ async function searchProduct(): Promise<ProductSearchResponseDto | null> {
   return response;
 }
 
-function setDialogProduct(idx: number) {
+// function setDialogProduct(idx: number) {
 
-  productSelected.value = products.value[idx - 1]
-  dialogProduct.value = true;
-}
+//   productSelected.value = products.value[idx - 1]
+//   dialogProduct.value = true;
+// }
 
 
 onMounted(async () => {
@@ -173,9 +174,9 @@ onMounted(async () => {
               <div v-if="dialogProduct"> <!--Needed for rendering-->
                 <ProductModal v-model="dialogProduct" :product="productSelected" />
               </div>
-              <v-col v-for="idx in products.length" :key="idx" cols="6" sm="4" md="3" class="">
+              <v-col v-for="product,idx in products" :key="idx" cols="6" sm="4" md="3" class="">
                 <!-- idx begin at 1, not 0 -->
-                <ProductCard :product="products[idx - 1]" class="w-100" @click.stop="() => { setDialogProduct(idx) }" />
+                <ProductCard :product="product" class="w-100" @click.stop="() => { router.push({ name:'productdetail', params: { slug: product.id+'-'+product.name }}); }" />
               </v-col>
               <v-col v-for="idx in (SKELETON_ITEMS - products.length % SKELETON_ITEMS)" :key="idx" cols="4" md="3"
                 class="" ref="skeletonIndicator">

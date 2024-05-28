@@ -18,6 +18,8 @@ onMounted(async () => {
     const rarityFilterResponse: AxiosResponse = await AxiosClient.getInstance().get(GET_RARITY_FILTERS);
     const merchantFilterResponse: AxiosResponse = await AxiosClient.getInstance().get(GET_MERCHANT_FILTERS);
 
+    console.log(rarityFilterResponse);
+
     rarityFilters.value = rarityFilterResponse.data;
     merchantFilters.value = merchantFilterResponse.data;
 

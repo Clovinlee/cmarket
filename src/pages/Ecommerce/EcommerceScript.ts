@@ -1,7 +1,7 @@
 import { ProductSearchDto } from './dto/ProductSearch.dto';
 import { ProductSearchResponseDto } from './dto/ProductSearchResponse.dto';
-import Product from '../../models/products';
-import Rarity from '../../models/rarity';
+import Product from '../../models/Product';
+import Rarity from '../../models/Rarity';
 import { AxiosClient } from '../../api/AxiosClient';
 import { PRODUCT_ENDPOINT } from '../../ApiEndpoints';
 
@@ -30,8 +30,6 @@ async function fetchProducts(paramSearch: ProductSearchDto): Promise<ProductSear
     try {
         // const response = await axios.get(API_URL);
         const response = await AxiosClient.getInstance().get(API_URL);
-
-        
 
         const productsData = response.data.products.map(p => {
             return new Product(p.id, p.name, p.description, p.price, p.image, new Rarity(p.rarity.id, p.rarity.name, p.rarity.color, p.rarity.level))

@@ -18,6 +18,14 @@ const routes = [
   { path: '/register', component: () => import('../pages/Auth/Register/RegisterPage.vue'), name: "register", meta: { layout: AuthLayout, role: [RoleEnum.ROLE_GUEST] } },
   { path: '/login', component: () => import('../pages/Auth/Login/LoginPage.vue'), name: "login", meta: { layout: AuthLayout, role: [RoleEnum.ROLE_GUEST] } },
   { path: '/profle', component: () => import('../pages/Profile/ProfilePage.vue'), name: "profile", meta: { layout: "", role: [RoleEnum.ROLE_USER, RoleEnum.ROLE_ADMIN] } },
+  { path: '/product', redirect: '/notfound', children: [
+    {
+      path: ':slug',
+      component: () => import('../pages/Ecommerce/ProductDetailPage.vue'),
+      name: "productdetail",
+      meta: { layout: EcommerceLayout,}
+    },
+  ]},
   {
     path: '/verify',
     redirect: '/notfound',

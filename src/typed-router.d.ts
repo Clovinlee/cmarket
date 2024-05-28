@@ -25,6 +25,7 @@ declare module 'vue-router/auto-routes' {
     '/Auth/ResetPasswordPage': RouteRecordInfo<'/Auth/ResetPasswordPage', '/Auth/ResetPasswordPage', Record<never, never>, Record<never, never>>,
     '/Ecommerce/components/FormFilterComponent': RouteRecordInfo<'/Ecommerce/components/FormFilterComponent', '/Ecommerce/components/FormFilterComponent', Record<never, never>, Record<never, never>>,
     '/Ecommerce/EcommercePage': RouteRecordInfo<'/Ecommerce/EcommercePage', '/Ecommerce/EcommercePage', Record<never, never>, Record<never, never>>,
+    '/Ecommerce/ProductDetailPage': RouteRecordInfo<'/Ecommerce/ProductDetailPage', '/Ecommerce/ProductDetailPage', Record<never, never>, Record<never, never>>,
     '/NotFoundPage': RouteRecordInfo<'/NotFoundPage', '/NotFoundPage', Record<never, never>, Record<never, never>>,
     '/Profile/ProfilePage': RouteRecordInfo<'/Profile/ProfilePage', '/Profile/ProfilePage', Record<never, never>, Record<never, never>>,
   }
