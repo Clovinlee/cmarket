@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, useSlots } from 'vue';
+import { onMounted, ref, useSlots, watch } from 'vue';
 
 const slots: string = (useSlots() as any).default()[0].children;
 

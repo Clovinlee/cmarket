@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import Product from "../../models/Product";
 import { AxiosClient } from "../../api/AxiosClient";
@@ -17,7 +17,14 @@ const discountPercent = ref<number>(getRandomNumber(1, 25));
 const wishList = ref<boolean>(false);
 const tabsModel = ref(null);
 
-const quantity = ref(1);
+const quantity = ref<number>(1);
+watch(quantity, (val) => {
+    if (val < 1) {
+        quantity.value = 1;
+    }
+});
+
+
 const subtotal = ref(1);
 
 const imageCol = ref<HTMLElement | null>(null); //col 1
@@ -129,7 +136,7 @@ function setToggleNote() {
 
                         <div class="d-flex align-center">
                             <v-icon icon="mdi-diamond-stone" class="" size="large"></v-icon>
-                            <div class="text-h5 font-weight-bold">999</div>
+                            <div class="text-h5 font-weight-bold">{{ product ? product.price : 0 }}</div>
                         </div>
                     </v-sheet>
 
@@ -138,7 +145,7 @@ function setToggleNote() {
                         <v-sheet class="bg-danger text-subtitle-2 font-weight-bold rounded-sm px-1"
                             style="background-color: #ffdbe2; color: #f94d63">{{ discountPercent }}%</v-sheet>
                         <v-sheet class="text-subtitle-2 text-disabled text-decoration-line-through font-weight-bold">{{
-                            ((discountPercent+100)/100)*999 }}</v-sheet>
+                            ((discountPercent+100)/100)* (product ? product.price : 0) }}</v-sheet>
                     </v-sheet>
 
                     <!-- TABS -->
@@ -148,108 +155,15 @@ function setToggleNote() {
                             <v-tab :value="2">Important</v-tab>
                         </v-tabs>
                         <v-sheet>
-                            <ReadMoreText v-if="tabsModel == 1">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                                libero diam, ultrices eget eros ut, fermentum sodales tortor.
-                                Fusce id lorem nec lorem scelerisque lacinia et ac sem. Aliquam
-                                viverra odio erat, nec tempus leo pellentesque nec. Donec
-                                consequat ornare auctor. Vestibulum vulputate turpis lectus, id
-                                vestibulum nisi gravida a. Phasellus accumsan luctus nisi vel
-                                mollis. Vestibulum tempor, diam ut malesuada vulputate, purus
-                                lectus malesuada tellus, et placerat elit arcu non libero. Sed
-                                aliquam venenatis enim. Donec ullamcorper posuere enim, ac sodales
-                                urna pharetra id. Proin leo nisi, eleifend ut congue et, aliquam
-                                ut leo. Integer quis mi sit amet libero porttitor fermentum. Nulla
-                                facilisi. Suspendisse eros purus, egestas sit amet congue eget,
-                                commodo vitae ipsum. Cras tempor metus arcu, ac cursus neque
-                                eleifend eget. In hac habitasse platea dictumst. Donec tortor
-                                elit, vulputate ut nibh ut, tincidunt faucibus felis. Suspendisse
-                                lacinia et enim semper placerat. Nulla lacinia nibh risus, et
-                                pharetra dui dapibus non. Mauris et nibh porta, tempus leo non,
-                                vehicula ante. Sed at gravida turpis. Proin luctus gravida augue
-                                ut lobortis. Donec et turpis turpis. Fusce malesuada turpis
-                                egestas, cursus tellus ut, fringilla quam. Integer quis ligula in
-                                risus vestibulum tincidunt. Cras euismod nunc venenatis vehicula
-                                tincidunt. Fusce ac lacus tincidunt, varius nunc quis, hendrerit
-                                justo. Nunc egestas consequat lacus ut varius. Suspendisse nec
-                                velit sed lectus sollicitudin sodales in quis risus. Praesent vel
-                                maximus purus. Interdum et malesuada fames ac ante ipsum primis in
-                                faucibus. Pellentesque nunc tortor, placerat nec aliquam non,
-                                aliquet non est. Aliquam consequat sodales justo, sit amet
-                                tincidunt leo fermentum sed. Mauris imperdiet libero non tortor
-                                feugiat, pulvinar porta lacus posuere. Maecenas felis quam,
-                                tincidunt vitae euismod sed, porta vel quam. Etiam sodales augue
-                                vitae nisl aliquam, eget consectetur lorem lacinia. Integer a
-                                risus nibh. Vivamus quis augue auctor, rhoncus odio ac, volutpat
-                                mi. Nulla aliquam ex est, vel interdum quam aliquet a.
-                                Pellentesque fermentum eu nisl eu lobortis. Donec sed fringilla
-                                ex. Cras blandit elementum tempor. Maecenas ultrices turpis non ex
-                                auctor, dictum ullamcorper orci porta. Pellentesque interdum ut
-                                nibh at tincidunt. Fusce id bibendum augue, id laoreet eros.
-                                Curabitur maximus, purus at rutrum sodales, augue nibh interdum
-                                ipsum, quis egestas sapien libero vitae ipsum. Nam iaculis dictum
-                                nunc et mollis. Phasellus commodo vitae est nec euismod. Donec
-                                viverra purus at felis varius, id malesuada tortor faucibus. Nunc
-                                mollis tortor id arcu elementum, quis cursus arcu semper.
-                                Vestibulum ipsum mauris, ultricies non ultrices vel, rhoncus at
-                                est. Nam vel enim tristique, luctus mauris eu, efficitur dolor.
-                                Phasellus quis lacinia sapien. Mauris ac mauris risus. Duis sed
-                                mattis sem, non sagittis velit. Suspendisse finibus vel eros ac
-                                tincidunt. Mauris sed lobortis purus, quis sollicitudin est. Nam
-                                venenatis ex id lacus tempor semper. Sed in mattis eros, a ornare
-                                quam. Fusce consequat, nisi eu accumsan ornare, metus magna cursus
-                                erat, a lobortis neque sapien eget nisl. Aliquam pretium tristique
-                                magna feugiat vestibulum. Quisque urna ante, aliquam in dignissim
-                                sed, commodo sed tortor. Ut feugiat imperdiet purus in mattis.
-                                Aliquam sit amet turpis euismod, elementum dolor a, scelerisque
-                                nisl. Phasellus lorem lectus, tempor at rhoncus quis, eleifend sed
-                                quam. In vestibulum ante sit amet mattis commodo. In hac habitasse
-                                platea dictumst. Donec sollicitudin, ex non pellentesque ornare,
-                                justo arcu feugiat massa, vitae elementum justo nisi maximus nibh.
-                                In sit amet tincidunt dui. Proin sed consequat erat. Nam semper
-                                blandit metus quis elementum. Phasellus mattis nibh eu magna
-                                rutrum, vel viverra turpis tempus. Phasellus ut nisl eget velit
-                                imperdiet feugiat eu sed diam. Pellentesque at risus pretium nulla
-                                aliquet fermentum nec vel ante. Cras vel tincidunt urna. Mauris id
-                                eros ut lorem malesuada tincidunt eget interdum sem. Curabitur
-                                finibus, eros nec efficitur dignissim, urna est fringilla ligula,
-                                non tempor felis nunc vel massa. Maecenas lacinia eu erat at
-                                posuere. Suspendisse mattis nec metus at maximus. Vestibulum vel
-                                cursus ipsum, non convallis justo. Nunc porta finibus massa, ac
-                                aliquet turpis congue id. In mollis nisi mauris, a porttitor sem
-                                elementum eget. Cras dapibus magna a libero blandit, eget porta ex
-                                hendrerit. Praesent non metus odio. Sed vel ultrices ex. Mauris
-                                eget mi lobortis, sollicitudin libero nec, iaculis mauris. Sed in
-                                odio commodo, mattis sem ut, laoreet massa. Donec mattis nunc
-                                elementum, auctor libero a, efficitur nunc. Aliquam in magna ut
-                                nisi placerat commodo. Aenean vitae viverra magna, ac maximus
-                                urna. Curabitur et libero in risus vestibulum faucibus. Mauris in
-                                tempus nunc. Integer vitae enim nec tellus tempor lobortis. Ut
-                                ullamcorper justo et consectetur sagittis. Maecenas id enim
-                                lobortis, rutrum dolor vitae, suscipit felis. Donec faucibus metus
-                                diam. Suspendisse pharetra cursus elit, ut finibus libero tempor
-                                non. Aenean eleifend fringilla augue, a congue magna porta a.
-                                Curabitur eros lorem, molestie vitae nibh at, tempor ornare purus.
-                                Nullam sed elementum nulla. Etiam ultricies viverra consectetur.
-                                Suspendisse porta libero et lorem porta condimentum. In ultrices
-                                leo vitae ultricies malesuada. Sed sed facilisis dolor.
-                                Pellentesque quis orci commodo, facilisis risus eget, fermentum
-                                lorem. Mauris elit lectus, malesuada et efficitur at, varius vitae
-                                tortor. Mauris a lorem eros. Nam condimentum arcu quis lacus
-                                pellentesque vulputate. Praesent tincidunt eget lorem ac molestie.
-                                Donec finibus sem ac finibus lacinia. Duis felis massa, laoreet at
-                                varius non, elementum eget nisi. Maecenas aliquet elit ut sapien
-                                luctus molestie. Proin tortor quam, porta vitae erat a, laoreet
-                                vestibulum magna. Vestibulum ac fermentum odio. Vestibulum ex mi,
-                                tristique ut tortor at, vulputate bibendum nulla. Praesent sit
-                                amet tincidunt orci. Donec auctor arcu sed odio lacinia, ac
-                                vehicula magna congue. Phasellus sit amet est congue, rhoncus sem
-                                non, luctus dolor. Ut sed felis quis ante consequat pharetra vel
-                                eget dui. Curabitur quis magna sem. Sed tempus erat nec lorem
-                                varius maximus. Etiam nec diam blandit, posuere diam sit amet,
-                                tempor orci. Etiam commodo tortor ligula, eu tristique enim auctor
-                                condimentum.
-                            </ReadMoreText>
+                            <div v-if="tabsModel == 1">
+                                <ReadMoreText v-if="product.description == undefined">
+                                    No Description
+                                </ReadMoreText>
+                                <ReadMoreText v-else>
+                                    {{ product.description }} Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima asperiores ducimus unde eaque fugiat quod. Molestiae suscipit distinctio, saepe reiciendis deleniti harum sint, doloribus dolore officia officiis ex temporibus aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem doloribus dolorum id unde similique, quaerat expedita possimus doloremque maxime repellendus nisi eligendi, corporis ad. Repudiandae suscipit dolorum id ipsa cum.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. At laboriosam exercitationem aliquid ut libero doloribus placeat provident consectetur, distinctio, facere qui maxime consequuntur nobis aliquam dolore repudiandae voluptas, illo quisquam.
+                                </ReadMoreText>
+                            </div>
                             <v-sheet v-else>
                                 <div class="text-body-1">
                                     Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -355,7 +269,7 @@ function setToggleNote() {
                         <v-sheet class="d-flex justify-space-between align-center my-5">
                             <div class="text-body-1 text-grey">Subtotal</div>
                             <div class="text-h6 font-weight-bold">
-                                <span><v-icon icon="mdi-diamond-stone" class=""></v-icon></span>999
+                                <span><v-icon icon="mdi-diamond-stone" class=""></v-icon></span>{{ ((product ? product.price : 0) * quantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
                             </div>
                         </v-sheet>
 
