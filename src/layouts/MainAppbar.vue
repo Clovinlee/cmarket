@@ -50,7 +50,11 @@ async function logout() {
   <v-app-bar class="px-3">
     <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
-    <v-app-bar-title>CMarket</v-app-bar-title>
+    <v-app-bar-title>
+      <RouterLink :to="{ name: 'home' }" class="text-decoration-none text-black">
+        <span class="text-title text-h4">CMarket</span>
+      </RouterLink>
+    </v-app-bar-title>
     <v-spacer></v-spacer>
     <v-menu min-width="200px" rounded v-if="!loadingUserInformation.value && user">
       <template v-slot:activator="{ props }">
